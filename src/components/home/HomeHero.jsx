@@ -38,8 +38,8 @@ const homeHeroData = [
   }
 ];
 
-const HomeHero = (props) => {
-  return <GlobalHero data={homeHeroData} {...props} />;
+const HomeHero = () => {
+  return <GlobalHero data={homeHeroData} />;
 };
 
 export default HomeHero;
