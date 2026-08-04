@@ -3,6 +3,8 @@ import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import Layout from './components/common/Layout';
 import HomePage from './pages/HomePage';
 import NotFound from './pages/NotFound';
+import AchievementsPage from './pages/Achievements';
+
 
 function App() {
     return (
@@ -11,6 +13,7 @@ function App() {
                 <Routes>
                     <Route path="/" element={<HomePage />} />
                     <Route path="*" element={<NotFound />} />
+                    <Route path="/achievements" element={<AchievementsPage />} />
                 </Routes>
             </Layout>
         </Router>
