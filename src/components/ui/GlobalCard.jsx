@@ -1,32 +1,19 @@
-import React, { useCallback, useState, useRef } from 'react';
+import React, { useCallback, useRef } from 'react';
 import { motion, useMotionValue, useSpring, useTransform } from 'framer-motion';
+import { ArrowUpRight } from 'lucide-react';
 
 /* ------------------------------------------------------------------ */
-/* Colour tokens per accent                                            */
+/* Accent style mappings (Light Theme Only)                           */
 /* ------------------------------------------------------------------ */
-const accents = {
-  emerald: {
-    light: {
-      ring: 'rgba(16,185,129,0.45)',
-      glow: 'rgba(16,185,129,0.08)',
-      orbit: 'border-emerald-300/30 group-hover:border-emerald-400/50',
-      iconShadow: 'group-hover:shadow-[0_0_28px_rgba(16,185,129,0.25)]',
-      nameTint: 'group-hover:text-emerald-600',
-      categoryBg: 'bg-emerald-50 text-emerald-600 border-emerald-200/60',
-      dot: 'bg-emerald-400',
-      shadow: 'hover:shadow-[0_20px_50px_rgba(16,185,129,0.10)]',
-    },
-    dark: {
-      ring: 'rgba(16,185,129,0.50)',
-      glow: 'rgba(16,185,129,0.10)',
-      orbit: 'border-emerald-500/10 group-hover:border-emerald-400/30',
-      iconShadow: 'group-hover:shadow-[0_0_32px_rgba(16,185,129,0.30)]',
-      nameTint: 'group-hover:text-emerald-400',
-      categoryBg: 'bg-emerald-500/10 text-emerald-400 border-emerald-500/20',
-      dot: 'bg-emerald-400',
-      shadow: 'hover:shadow-[0_20px_60px_rgba(16,185,129,0.12)]',
-    },
-  },
+const ACCENT = {
+  ring: 'rgba(16,185,129,0.45)',
+  glow: 'rgba(16,185,129,0.08)',
+  orbit: 'border-emerald-300/30 group-hover:border-emerald-400/50',
+  iconShadow: 'group-hover:shadow-[0_0_28px_rgba(16,185,129,0.25)]',
+  nameTint: 'group-hover:text-emerald-600',
+  categoryBg: 'bg-emerald-50 text-emerald-600 border-emerald-200/60',
+  dot: 'bg-emerald-400',
+  shadow: 'hover:shadow-[0_20px_50px_rgba(16,185,129,0.10)]',
 };
 
 const GlobalCard = ({
@@ -35,56 +22,42 @@ const GlobalCard = ({
   name,
   short,
   category,
-  theme = 'light',
   index = 0,
-  accentColor = 'emerald',
   flatIcon = false,
   className = '',
 }) => {
-  const isDark = theme === 'dark';
-  const a = accents.emerald[isDark ? 'dark' : 'light'];
   const cardRef = useRef(null);
   const isImageIcon = typeof icon === 'string' && /^(data:image|https?:\/\/)/i.test(icon);
 
-  /* ---- spring-physics mouse tracking ---- */
+  /* ---- Spring-physics mouse tracking ---- */
   const mx = useMotionValue(0.5);
   const my = useMotionValue(0.5);
+  const cx = useMotionValue(0);
+  const cy = useMotionValue(0);
+
   const sx = useSpring(mx, { stiffness: 300, damping: 35 });
   const sy = useSpring(my, { stiffness: 300, damping: 35 });
   const rotX = useTransform(sy, [0, 1], [4, -4]);
   const rotY = useTransform(sx, [0, 1], [-4, 4]);
 
-  const [cur, setCur] = useState({ x: 0, y: 0 });
-
   const onMove = useCallback(
     (e) => {
       const r = e.currentTarget.getBoundingClientRect();
-      mx.set((e.clientX - r.left) / r.width);
-      my.set((e.clientY - r.top) / r.height);
-      setCur({ x: e.clientX - r.left, y: e.clientY - r.top });
+      const x = e.clientX - r.left;
+      const y = e.clientY - r.top;
+
+      mx.set(x / r.width);
+      my.set(y / r.height);
+      cx.set(x);
+      cy.set(y);
     },
-    [mx, my],
+    [mx, my, cx, cy]
   );
 
   const onLeave = useCallback(() => {
     mx.set(0.5);
     my.set(0.5);
   }, [mx, my]);
-
-  /* ---- base theme tokens ---- */
-  const base = isDark
-    ? {
-        card: 'bg-gradient-to-b from-[#0c0a24]/95 to-[#06041a]/95 border-white/[0.06]',
-        shadow: 'shadow-[0_2px_24px_rgba(0,0,0,0.55)]',
-        name: 'text-white',
-        category: 'text-slate-500',
-      }
-    : {
-        card: 'bg-gradient-to-b from-white to-slate-50/70 border-slate-200/70',
-        shadow: 'shadow-[0_1px_4px_rgba(15,23,42,0.03),0_8px_24px_rgba(15,23,42,0.05)]',
-        name: 'text-slate-900',
-        category: 'text-slate-400',
-      };
 
   return (
     <motion.div
@@ -107,10 +80,10 @@ const GlobalCard = ({
         rotateX: rotX,
         rotateY: rotY,
         transformPerspective: 700,
-        '--cx': `${cur.x}px`,
-        '--cy': `${cur.y}px`,
+        '--cx': useTransform(cx, (v) => `${v}px`),
+        '--cy': useTransform(cy, (v) => `${v}px`),
       }}
-      className={`group relative flex flex-col items-center justify-center overflow-hidden rounded-2xl border p-7 sm:p-8 min-h-[220px] cursor-pointer will-change-transform transition-all duration-300 ease-out ${base.card} ${base.shadow} ${a.shadow} ${className}`}
+      className={`group relative flex flex-col items-center justify-center overflow-hidden rounded-2xl border p-7 sm:p-8 min-h-[220px] cursor-pointer will-change-transform transition-all duration-300 ease-out bg-gradient-to-b from-white to-slate-50/70 border-slate-200/70 shadow-[0_1px_4px_rgba(15,23,42,0.03),0_8px_24px_rgba(15,23,42,0.05)] ${ACCENT.shadow} ${className}`}
     >
       {/* ---- Noise grain ---- */}
       <div
@@ -120,16 +93,11 @@ const GlobalCard = ({
         }}
       />
 
-      {/* ---- Dark-mode grid ---- */}
-      {isDark && (
-        <div className="absolute inset-0 bg-[linear-gradient(to_right,#ffffff02_1px,transparent_1px),linear-gradient(to_bottom,#ffffff02_1px,transparent_1px)] bg-[size:28px_28px] [mask-image:radial-gradient(ellipse_60%_50%_at_50%_50%,#000_40%,transparent_100%)] opacity-40 pointer-events-none" />
-      )}
-
       {/* ---- Cursor spotlight ---- */}
       <div
         className="pointer-events-none absolute -inset-px rounded-2xl opacity-0 transition-opacity duration-500 group-hover:opacity-100"
         style={{
-          background: `radial-gradient(320px circle at var(--cx) var(--cy), ${a.glow}, transparent 70%)`,
+          background: `radial-gradient(320px circle at var(--cx) var(--cy), ${ACCENT.glow}, transparent 70%)`,
         }}
       />
 
@@ -137,7 +105,7 @@ const GlobalCard = ({
       <div
         className="pointer-events-none absolute -inset-px rounded-2xl opacity-0 transition-opacity duration-500 group-hover:opacity-100"
         style={{
-          background: `radial-gradient(200px circle at var(--cx) var(--cy), ${a.ring}, transparent 65%)`,
+          background: `radial-gradient(200px circle at var(--cx) var(--cy), ${ACCENT.ring}, transparent 65%)`,
           mask: 'linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0)',
           WebkitMask: 'linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0)',
           maskComposite: 'exclude',
@@ -152,7 +120,7 @@ const GlobalCard = ({
       <div className="relative z-10 mb-5 flex items-center justify-center">
         {/* Decorative orbit ring */}
         <div
-          className={`absolute h-24 w-24 rounded-full border transition-all duration-500 scale-90 group-hover:scale-100 opacity-60 group-hover:opacity-100 ${a.orbit}`}
+          className={`absolute h-24 w-24 rounded-full border transition-all duration-500 scale-90 group-hover:scale-100 opacity-60 group-hover:opacity-100 ${ACCENT.orbit}`}
         />
 
         {/* Icon container */}
@@ -160,29 +128,19 @@ const GlobalCard = ({
           whileHover={{ scale: flatIcon ? 1 : 1.1, rotate: flatIcon ? 0 : 3 }}
           transition={{ type: 'spring', stiffness: 350, damping: 18 }}
           className={`relative flex items-center justify-center transition-all duration-300 ${
-            flatIcon 
-              ? 'h-12 w-12 rounded-none border-0 bg-transparent shadow-none' 
-              : `h-16 w-16 rounded-2xl border backdrop-blur-sm ${
-                  isDark
-                    ? 'bg-slate-900/90 border-white/10 shadow-[0_8px_24px_rgba(15,23,42,0.45)]'
-                    : 'bg-white border-slate-200/70 shadow-[0_2px_8px_rgba(0,0,0,0.04)]'
-                } ${a.iconShadow}`
+            flatIcon
+              ? 'h-12 w-12 rounded-none border-0 bg-transparent shadow-none'
+              : `h-16 w-16 rounded-2xl border backdrop-blur-sm bg-white border-slate-200/70 shadow-[0_2px_8px_rgba(0,0,0,0.04)] ${ACCENT.iconShadow}`
           }`}
         >
-          {/* Render either a React node icon or an image URL */}
           {iconUrl || isImageIcon ? (
             <img
               src={iconUrl || icon}
               alt={name || 'Service icon'}
               className="h-8 w-8 object-contain transition-transform duration-300 group-hover:scale-110"
-              style={isDark ? { filter: 'brightness(0) invert(1)' } : undefined}
             />
           ) : icon ? (
-            <div
-              className={`transition-all duration-300 ${
-                isDark ? 'text-white/90 group-hover:text-white' : 'text-slate-500 group-hover:text-slate-800'
-              }`}
-            >
+            <div className="transition-all duration-300 text-slate-500 group-hover:text-slate-800">
               {React.isValidElement(icon)
                 ? React.cloneElement(icon, {
                     size: 26,
@@ -192,16 +150,14 @@ const GlobalCard = ({
             </div>
           ) : (
             /* Fallback placeholder */
-            <div
-              className={`h-6 w-6 rounded-md ${isDark ? 'bg-white/10' : 'bg-slate-200'}`}
-            />
+            <div className="h-6 w-6 rounded-md bg-slate-200" />
           )}
         </motion.div>
 
         {/* Floating accent dot */}
         {!flatIcon && (
           <span
-            className={`absolute h-1.5 w-1.5 rounded-full top-0 right-2 opacity-0 group-hover:opacity-100 transition-all duration-500 group-hover:animate-pulse ${a.dot}`}
+            className={`absolute h-1.5 w-1.5 rounded-full top-0 right-2 opacity-0 group-hover:opacity-100 transition-all duration-500 group-hover:animate-pulse ${ACCENT.dot}`}
           />
         )}
       </div>
@@ -212,20 +168,20 @@ const GlobalCard = ({
       <div className="relative z-10 text-center space-y-2">
         {name && (
           <h3
-            className={`text-lg font-bold tracking-tight leading-snug transition-colors duration-300 ${base.name} ${a.nameTint}`}
+            className={`text-lg font-bold tracking-tight leading-snug transition-colors duration-300 text-slate-900 ${ACCENT.nameTint}`}
           >
             {name}
           </h3>
         )}
 
         {short && (
-          <p className="text-sm font-medium leading-6 text-slate-600 transition-colors duration-300 dark:text-slate-300">
+          <p className="text-sm font-medium leading-6 text-slate-600 transition-colors duration-300">
             {short}
           </p>
         )}
 
         {category && (
-          <p className={`text-sm leading-6 transition-colors duration-300 ${base.category}`}>
+          <p className="text-sm leading-6 transition-colors duration-300 text-slate-400">
             {category}
           </p>
         )}
@@ -235,15 +191,27 @@ const GlobalCard = ({
       <div
         className="absolute bottom-0 left-6 right-6 h-px origin-center scale-x-0 transition-transform duration-500 ease-out group-hover:scale-x-100"
         style={{
-          background: `linear-gradient(90deg, transparent, ${a.ring.replace(/[\d.]+\)$/, '0.5)')}, transparent)`,
+          background: `linear-gradient(90deg, transparent, rgba(16,185,129,0.5), transparent)`,
         }}
       />
 
       {/* ---- Subtle corner shine ---- */}
       <div
         className="absolute -top-12 -right-12 h-24 w-24 rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-700 blur-2xl pointer-events-none"
-        style={{ backgroundColor: a.ring.replace(/[\d.]+\)$/, '0.08)') }}
+        style={{ backgroundColor: 'rgba(16,185,129,0.08)' }}
       />
+
+      {/* ---- Arrow CTA ---- */}
+      <div className="absolute top-4 right-4 z-10">
+        <span
+          className="inline-flex items-center justify-center w-6 h-6 text-emerald-600 transition-transform duration-200"
+          title="Open details"
+          aria-hidden="false"
+        >
+          <ArrowUpRight className="w-4 h-4" aria-hidden="true" />
+          <span className="sr-only">Opens details page</span>
+        </span>
+      </div>
     </motion.div>
   );
 };
