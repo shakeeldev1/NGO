@@ -54,8 +54,8 @@ const Navbar = () => {
                         whileTap={{ scale: 0.98 }}
                         className="flex flex-col"
                     >
-                        <span className="text-slate-900 font-extrabold text-xl lg:text-2xl tracking-tight leading-none">
-                            USWA
+                        <span className="text-slate-900 font-light text-xl lg:text-2xl tracking-tight leading-none">
+                            US<span className="font-serif italic text-emerald-600">WA</span>
                         </span>
                         <span className="text-[10px] text-emerald-600 font-bold tracking-wider uppercase">
                             United Social Watch & Advocacy
