@@ -57,8 +57,8 @@ const Footer = () => {
                     <div className="space-y-5 max-w-md">
                         <Link to="/" className="inline-block group">
                             <div className="flex flex-col">
-                                <span className="text-slate-900 font-extrabold text-2xl tracking-tight transition-transform duration-300 group-hover:scale-[1.02]">
-                                    USWA
+                                <span className="text-slate-900 font-light text-2xl tracking-tight transition-transform duration-300 group-hover:scale-[1.02]">
+                                    US<span className="font-serif italic text-emerald-600">WA</span>
                                 </span>
                                 <span className="text-[10px] text-emerald-600 font-bold tracking-wider uppercase">
                                     United Social Watch & Advocacy
@@ -98,7 +98,7 @@ const Footer = () => {
                         <div key={section.title} className="space-y-4">
                             <div className="flex items-center gap-2">
                                 <div className="w-1.5 h-1.5 rounded-full bg-emerald-600" />
-                                <h4 className="text-xs font-bold uppercase tracking-wider text-slate-900">
+                                <h4 className="text-xs font-bold uppercase tracking-[0.2em] text-slate-900">
                                     {section.title}
                                 </h4>
                             </div>
@@ -121,7 +121,7 @@ const Footer = () => {
                     <div className="space-y-4">
                         <div className="flex items-center gap-2">
                             <div className="w-1.5 h-1.5 rounded-full bg-emerald-600" />
-                            <h4 className="text-xs font-bold uppercase tracking-wider text-slate-900">
+                            <h4 className="text-xs font-bold uppercase tracking-[0.2em] text-slate-900">
                                 Contact Info
                             </h4>
                         </div>
