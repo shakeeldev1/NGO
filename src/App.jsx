@@ -8,6 +8,8 @@ import AboutPage from './pages/AboutPage';
 
 import AchievementsPage from './pages/Achievements';
 import ContactPage from './pages/ContactPage';
+import SurveysMonitoringCard from './components/home/Survey';
+import Workshop from './components/home/Workshop';
 
 
 
@@ -21,6 +23,8 @@ function App() {
                     <Route path="/contact" element={<ContactPage />} />
                     <Route path="*" element={<NotFound />} />
                     <Route path="/achievements" element={<AchievementsPage />} />
+                    <Route path="/services/survey" element={<SurveysMonitoringCard />} />
+                    <Route path="/services/workshops" element={<Workshop />} />
                 </Routes>
             </Layout>
         </Router>
