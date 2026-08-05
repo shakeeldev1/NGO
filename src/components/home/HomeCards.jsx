@@ -1,4 +1,5 @@
 import React, { useState, memo } from 'react';
+
 import { motion, AnimatePresence } from 'framer-motion';
 import { 
   HeartPulse, 
@@ -23,7 +24,7 @@ const ALL_CARDS = [
     short: 'Setting up mobile dispensaries, medical camps with Indus Hospital, and TCV vaccination drives.',
     category: 'Healthcare',
     accentColor: 'emerald',
-    href: '/services/health',
+    href: '/health',
   },
   {
     id: 'education',
@@ -32,7 +33,7 @@ const ALL_CARDS = [
     short: 'Opening community schools in Katchi Abadi, books distribution, and Deeni Taleem classes.',
     category: 'Education',
     accentColor: 'emerald',
-    href: '/services/education',
+    href: '/education',
   },
   {
     id: 'survey',
