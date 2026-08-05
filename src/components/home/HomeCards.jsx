@@ -78,7 +78,7 @@ const ALL_CARDS = [
     short: 'Charity interventions, heatwave relief camps, and essential learning material distributions.',
     category: 'Relief Work',
     accentColor: 'emerald',
-    href: '/services/donations',
+    href: '/donations',
   },
   {
     id: 'blood-collection',
@@ -87,7 +87,7 @@ const ALL_CARDS = [
     short: 'Organizing blood donation drives with Young Stars team in partnership with Hussaini Blood Bank.',
     category: 'Emergency Health',
     accentColor: 'emerald',
-    href: '/services/blood-collection',
+    href: '/blood-collection',
   },
 ];
 
