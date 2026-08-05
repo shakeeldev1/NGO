@@ -59,7 +59,7 @@ const ALL_CARDS = [
     short: 'Providing strategic advisory, local government networking, and institutional development.',
     category: 'Advisory',
     accentColor: 'emerald',
-    href: '/services/consultancy',
+    href: '/consultancy',
   },
   {
     id: 'awareness',
@@ -68,7 +68,7 @@ const ALL_CARDS = [
     short: 'Grassroots awareness campaigns on out-of-school children, gender rights, and climate change.',
     category: 'Advocacy',
     accentColor: 'emerald',
-    href: '/services/awareness',
+    href: '/awareness',
   },
   {
     id: 'donations',
@@ -154,8 +154,6 @@ const HomeCards = ({ items = ALL_CARDS }) => {
             })}
           </AnimatePresence>
         </div>
-
-        {/* Show More / Show Less Button */}
         {items.length > 6 && (
           <div className="mt-12 flex justify-center">
             <button
